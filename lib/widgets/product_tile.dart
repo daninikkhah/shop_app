@@ -8,7 +8,7 @@ class ProductTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final Product product = Provider.of<Product>(context, listen: false);
     return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
       child: GridTile(
         child: GestureDetector(
           onTap: () {
