@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './product_tile.dart';
 import '../providers/products_provider.dart';
-import '../models/product.dart';
+import '../providers/product.dart';
 
 class ProductGridView extends StatelessWidget {
   @override
@@ -16,10 +16,9 @@ class ProductGridView extends StatelessWidget {
           childAspectRatio: 1.5,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10),
-      itemBuilder: (context, i) => ProductTile(
-        id: products[i].id,
-        title: products[i].title,
-        imageUrl: products[i].imageUrl,
+      itemBuilder: (context, i) => ChangeNotifierProvider(
+        create: (context) => products[i],
+        child: ProductTile(),
       ),
       itemCount: products.length,
     );
