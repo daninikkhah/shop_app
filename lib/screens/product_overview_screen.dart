@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/product_GridView.dart';
+import '../widgets/badge.dart';
+import '../providers/cart.dart';
 
 enum ProductFilter { all, favorites }
 
@@ -12,6 +15,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   bool bShowAll = true;
   @override
   Widget build(BuildContext context) {
+    final Cart cart = Provider.of<Cart>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Outland Shop'),
@@ -32,7 +36,16 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                       child: Text('show all'),
                       value: ProductFilter.all,
                     ),
-                  ])
+                  ]),
+          Consumer<Cart>(
+            builder: (context, ch, _) => Badge(
+              value: cart.count,
+              child: IconButton(
+                icon: Icon(Icons.shopping_cart),
+                onPressed: () {},
+              ),
+            ),
+          )
         ],
       ),
       body: ProductGridView(

@@ -36,11 +36,13 @@ class ProductsProvider with ChangeNotifier {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
   ];
+  //TODO add update method to react to Product changes
   List<Product> get products {
     return [..._products];
   }
 
   List<Product> get favoriteProducts {
+    print('get favorite products');
     return _products.where((product) => product.isFavorite).toList();
   }
 

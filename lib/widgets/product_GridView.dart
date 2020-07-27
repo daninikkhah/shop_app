@@ -9,9 +9,11 @@ class ProductGridView extends StatelessWidget {
   final bool showAll;
   @override
   Widget build(BuildContext context) {
+    print('rebuild');
     final List<Product> products = showAll
-        ? Provider.of<ProductsProvider>(context).products
-        : Provider.of<ProductsProvider>(context).favoriteProducts;
+        ? Provider.of<ProductsProvider>(context, listen: false).products
+        : Provider.of<ProductsProvider>(context, listen: false)
+            .favoriteProducts;
     return GridView.builder(
       padding: const EdgeInsets.all(10),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
