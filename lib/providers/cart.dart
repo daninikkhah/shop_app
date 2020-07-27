@@ -3,10 +3,18 @@ import '../models/cart_item.dart';
 
 class Cart with ChangeNotifier {
   List<CartItem> _items = [];
-  Map<CartItem, String> _itemsMap = {};
-  get items => [..._items];
+  //Map<CartItem, String> _itemsMap = {};
+  List<CartItem> get items => [..._items];
 
-  get count => _items.length;
+  int get count => _items.length;
+
+  double get totalAmount {
+    double sum = 0;
+    _items.forEach((item) {
+      sum += item.price * item.quantity;
+    });
+    return sum;
+  }
 
   addItem({String id, double price, String title}) {
     _items.any((item) => item.id == id)

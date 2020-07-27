@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../widgets/product_GridView.dart';
 import '../widgets/badge.dart';
 import '../providers/cart.dart';
+import './cart_screen.dart';
 
 enum ProductFilter { all, favorites }
 
@@ -42,7 +43,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               value: cart.count,
               child: IconButton(
                 icon: Icon(Icons.shopping_cart),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(CartScreen.route);
+                },
               ),
             ),
           )
