@@ -35,17 +35,15 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-//                  const SizedBox(
-//                    width: 10,
-//                  ),
-//                  FlatButton(
-//                      onPressed: null,
-//                      child: Text(
-//                        'ORDER NOW',
-//                        style: TextStyle(
-//                            color: Theme.of(context).primaryColor,
-//                            fontSize: 16),
-//                      ))
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  IconButton(
+                      icon: Icon(
+                        Icons.shopping_cart,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      onPressed: () {})
                 ],
               ),
             ),
