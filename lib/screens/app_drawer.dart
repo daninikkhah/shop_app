@@ -11,7 +11,6 @@ class AppDrawer extends StatelessWidget {
           AppBar(
             title: const Text('Menu'),
           ),
-          Divider(),
           ListTile(
             leading: Icon(Icons.shop),
             title: const Text('Shop'),
@@ -20,6 +19,7 @@ class AppDrawer extends StatelessWidget {
                   .pushReplacementNamed(ProductOverviewScreen.route);
             },
           ),
+          Divider(),
           ListTile(
             leading: Icon(Icons.payment),
             title: const Text('Orders'),
