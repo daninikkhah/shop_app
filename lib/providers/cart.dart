@@ -22,10 +22,15 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
-  addItem({String id, double price, String title}) {
+  void addItem({String id, double price, String title}) {
     _items.any((item) => item.id == id)
         ? _items.firstWhere((item) => item.id == id).quantity++
         : _items.add(CartItem(id: id, title: title, price: price, quantity: 1));
+    notifyListeners();
+  }
+
+  void clear() {
+    _items = [];
     notifyListeners();
   }
 }
