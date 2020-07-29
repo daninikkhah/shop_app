@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/cart.dart';
 import '../widgets/cart_card.dart';
 import '../providers/orders.dart';
+import './orders_screen.dart';
 
 class CartScreen extends StatelessWidget {
   static const String route = 'shop_app/screens/cart_screen.dart';
@@ -51,6 +52,7 @@ class CartScreen extends StatelessWidget {
                         orders.addOrder(
                             items: cart.items, totalAmount: cart.totalAmount);
                         cart.clear();
+                        Navigator.of(context).pushNamed(OrdersScreen.route);
                       })
                 ],
               ),

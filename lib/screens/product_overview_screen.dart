@@ -4,10 +4,12 @@ import '../widgets/product_GridView.dart';
 import '../widgets/badge.dart';
 import '../providers/cart.dart';
 import './cart_screen.dart';
+import './app_drawer.dart';
 
 enum ProductFilter { all, favorites }
 
 class ProductOverviewScreen extends StatefulWidget {
+  static const String route = 'shop_app/screens/product_overview_screen.dart';
   @override
   _ProductOverviewScreenState createState() => _ProductOverviewScreenState();
 }
@@ -18,6 +20,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   Widget build(BuildContext context) {
     final Cart cart = Provider.of<Cart>(context, listen: false);
     return Scaffold(
+      drawer: AppDrawer(),
       appBar: AppBar(
         title: const Text('Outland Shop'),
         actions: [
