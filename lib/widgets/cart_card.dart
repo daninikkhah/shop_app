@@ -50,7 +50,7 @@ class CartCard extends StatelessWidget {
           title: Text(cartItem.title),
           subtitle: Text('${cartItem.quantity.toString()} X'),
           trailing: Text(
-            '\$${cartItem.quantity.toDouble() * cartItem.price}',
+            '\$${(cartItem.quantity * cartItem.price).toStringAsFixed(2)}',
             style: TextStyle(fontSize: 18),
           ),
         ),

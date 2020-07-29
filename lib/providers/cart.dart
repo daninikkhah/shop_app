@@ -9,27 +9,16 @@ class Cart with ChangeNotifier {
   int get count => _items.length;
 
   double get totalAmount {
-    //print(
-    //    '/////////////////////////////////******************************/////////////////////////////////');
     double sum = 0;
     _items.forEach((item) {
-      //  print('/////////////////////////////////');
-      //  print(
-      //      'price: ${item.price}, quantity: ${item.quantity}, price*quantity:${item.price * item.quantity}, sum : ${sum + item.price * item.quantity.toDouble()}');
-      //  print('/////////////////////////////////');
-      sum += item.price * item.quantity;
+      sum += (item.price * item.quantity);
+      print(sum);
     });
     return sum;
   }
 
   void removeItem(String id) {
-    //print(
-    //   '/////////////////////////////////******************************/////////////////////////////////');
     _items.removeWhere((item) => item.id == id);
-    _items.forEach((item) {
-      //  print(
-      //      'price: ${item.price}, quantity: ${item.quantity}, price*quantity:${item.price * item.quantity}');
-    });
     notifyListeners();
   }
 
