@@ -23,7 +23,27 @@ class CartCard extends StatelessWidget {
     return Dismissible(
       key: ValueKey(cartItem.id),
       direction: DismissDirection.endToStart,
-      onDismissed: (direction) => cart.removeItem(cartItem.id),
+      onDismissed: (direction) async {
+        cart.removeItem(cartItem.id);
+      },
+      confirmDismiss: (direction) => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(
+            'Are you sure?',
+            style: TextStyle(color: Colors.black),
+          ),
+          content: Text('Do you want to remove the item from the cart?'),
+          actions: [
+            FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('Yes')),
+            FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('No')),
+          ],
+        ),
+      ),
       background: Container(
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
