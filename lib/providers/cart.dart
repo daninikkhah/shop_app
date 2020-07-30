@@ -22,6 +22,11 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
+  void undo() {
+    _items.last.quantity > 1 ? _items.last.quantity-- : _items.removeLast();
+    notifyListeners();
+  }
+
   void addItem({String id, double price, String title}) {
     _items.any((item) => item.id == id)
         ? _items.firstWhere((item) => item.id == id).quantity++

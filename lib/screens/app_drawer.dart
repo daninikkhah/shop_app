@@ -12,7 +12,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Menu'),
           ),
           ListTile(
-            leading: Icon(Icons.shop),
+            leading: const Icon(Icons.shop),
             title: const Text('Shop'),
             onTap: () {
               Navigator.of(context)
@@ -21,7 +21,7 @@ class AppDrawer extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.payment),
+            leading: const Icon(Icons.payment),
             title: const Text('Orders'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(OrdersScreen.route);

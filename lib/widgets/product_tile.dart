@@ -47,6 +47,15 @@ class ProductTile extends StatelessWidget {
               onPressed: () {
                 cart.addItem(
                     id: product.id, price: product.price, title: product.title);
+                Scaffold.of(context).hideCurrentSnackBar();
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    duration: Duration(seconds: 5),
+                    content: const Text('product added'),
+                    action: SnackBarAction(
+                        label: 'undo', onPressed: () => cart.undo()),
+                  ),
+                );
               }),
         ),
       ),
