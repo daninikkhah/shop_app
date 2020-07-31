@@ -14,6 +14,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final TextEditingController _imageTextEditingController =
       TextEditingController();
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _imageTextEditingController.dispose();
+    _priceFocusNode.dispose();
+    _descriptionFocusNode.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
