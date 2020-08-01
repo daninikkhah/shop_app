@@ -16,10 +16,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final TextEditingController _imageUrlTextController = TextEditingController();
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
   Product product;
+  String id;
   String title;
   String description;
   String url;
   double price;
+  bool isFavorite;
+  bool run = false;
 
   @override
   void dispose() {
@@ -47,8 +50,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void _submitForm() {
     if (_form.currentState.validate()) {
       _form.currentState.save();
-      Provider.of<ProductsProvider>(context, listen: false).addProduct(
-          title: title, description: description, imageURl: url, price: price);
+      id == null
+          ? Provider.of<ProductsProvider>(context, listen: false).addProduct(
+              title: title,
+              description: description,
+              imageURl: url,
+              price: price,
+            )
+          : Provider.of<ProductsProvider>(context, listen: false).updateProduct(
+              id: id,
+              title: title,
+              description: description,
+              imageURl: url,
+              price: price,
+              isFavorite: isFavorite,
+            );
+
       Navigator.of(context).pop();
     }
     //todo
@@ -56,6 +73,24 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!run) {
+      id = ModalRoute.of(context).settings.arguments as String;
+      run = true;
+    }
+    print(id);
+    if (id != null) {
+      final Product currentProduct =
+          Provider.of<ProductsProvider>(context, listen: false)
+              .getProductWhere(id: id);
+      id = currentProduct.id;
+      title = currentProduct.title;
+      description = currentProduct.description;
+      url = currentProduct.imageUrl;
+      price = currentProduct.price;
+      isFavorite = currentProduct.isFavorite;
+      _imageUrlTextController.text = url;
+    }
+
     final double size = MediaQuery.of(context).size.width / 5;
     return Scaffold(
       appBar: AppBar(
@@ -72,6 +107,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             child: ListView(
               children: [
                 TextFormField(
+                  initialValue: title,
                   decoration: InputDecoration(
                     labelText: 'title',
                   ),
@@ -85,6 +121,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   },
                 ),
                 TextFormField(
+                  initialValue: price == null ? '' : price.toString(),
                   decoration: InputDecoration(
                     labelText: 'price',
                   ),
@@ -106,6 +143,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   },
                 ),
                 TextFormField(
+                  initialValue: description,
                   decoration: InputDecoration(
                     labelText: 'description',
                   ),

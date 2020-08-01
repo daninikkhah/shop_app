@@ -60,4 +60,28 @@ class ProductsProvider with ChangeNotifier {
         price: price));
     notifyListeners();
   }
+
+  void updateProduct(
+      {String id,
+      String title,
+      String description,
+      String imageURl,
+      double price,
+      bool isFavorite}) {
+    int index = _products.indexWhere((product) => product.id == id);
+    _products[index] = Product(
+      id: id,
+      title: title,
+      description: description,
+      imageUrl: imageURl,
+      price: price,
+      isFavorite: isFavorite,
+    );
+    notifyListeners();
+  }
+
+  void deleteProduct(String id) {
+    _products.removeWhere((product) => product.id == id);
+    notifyListeners();
+  }
 }

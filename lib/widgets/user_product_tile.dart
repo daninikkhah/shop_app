@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../screens/edit_product_screen.dart';
+import '../providers/products_provider.dart';
 
 class UserProductTile extends StatelessWidget {
   UserProductTile(
-      {@required this.title, @required this.imageUrl, @required this.price});
+      {@required this.id,
+      @required this.title,
+      @required this.imageUrl,
+      @required this.price});
+  final String id;
   final String title;
   final String imageUrl;
   final double price;
@@ -26,13 +33,52 @@ class UserProductTile extends StatelessWidget {
                       Icons.mode_edit,
                       color: Theme.of(context).primaryColor,
                     ),
-                    onPressed: null),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(EditProductScreen.route, arguments: id);
+                    }),
                 IconButton(
                     icon: Icon(
                       Icons.delete,
                       color: Theme.of(context).errorColor,
                     ),
-                    onPressed: null)
+                    onPressed: () async {
+                      bool condition;
+                      await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Are you sure?'),
+                              titleTextStyle: TextStyle(color: Colors.black),
+                              content:
+                                  Text('Do you want to delete the product?'),
+                              actions: [
+                                FlatButton(
+                                    onPressed: () {
+                                      condition = true;
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Yes!')),
+                                FlatButton(
+                                    onPressed: () {
+                                      condition = false;
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('No!')),
+                              ],
+                            );
+                          });
+                      if (condition) {
+                        Scaffold.of(context).hideCurrentSnackBar();
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Product deleted!'),
+                          ),
+                        );
+                        Provider.of<ProductsProvider>(context, listen: false)
+                            .deleteProduct(id);
+                      }
+                    })
               ],
             ),
           ),

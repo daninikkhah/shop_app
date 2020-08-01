@@ -7,6 +7,7 @@ import './edit_product_screen.dart';
 
 class UserProductsScreen extends StatelessWidget {
   static const String route = 'shop_app/screens/user_products_screen.dart';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +27,7 @@ class UserProductsScreen extends StatelessWidget {
         builder: (context, productsProvider, child) => ListView.builder(
           itemCount: productsProvider.products.length,
           itemBuilder: (context, i) => UserProductTile(
+            id: productsProvider.products[i].id,
             title: productsProvider.products[i].title,
             imageUrl: productsProvider.products[i].imageUrl,
             price: productsProvider.products[i].price,
