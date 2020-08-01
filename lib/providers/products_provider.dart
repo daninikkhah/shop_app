@@ -49,4 +49,15 @@ class ProductsProvider with ChangeNotifier {
   Product getProductWhere({String id}) {
     return products.firstWhere((product) => product.id == id);
   }
+
+  void addProduct(
+      {String title, String description, String imageURl, double price}) {
+    _products.add(Product(
+        id: DateTime.now().toString(),
+        title: title,
+        description: description,
+        imageUrl: imageURl,
+        price: price));
+    notifyListeners();
+  }
 }
