@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'product.dart';
+
+const String url = 'https://shop-app-f609c.firebaseio.com/products.json';
 
 class ProductsProvider with ChangeNotifier {
   List<Product> _products = [
@@ -36,6 +40,7 @@ class ProductsProvider with ChangeNotifier {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
   ];
+
   //TODO add update method to react to Product changes
   List<Product> get products {
     return [..._products];
@@ -52,13 +57,26 @@ class ProductsProvider with ChangeNotifier {
 
   void addProduct(
       {String title, String description, String imageURl, double price}) {
-    _products.add(Product(
-        id: DateTime.now().toString(),
-        title: title,
-        description: description,
-        imageUrl: imageURl,
-        price: price));
-    notifyListeners();
+    http
+        .post(
+      url,
+      body: json.encode({
+        'title': title,
+        'description': description,
+        'imageURl': imageURl,
+        'price': price,
+        'isFavorite': false,
+      }),
+    )
+        .then((value) {
+      _products.add(Product(
+          id: DateTime.now().toString(),
+          title: title,
+          description: description,
+          imageUrl: imageURl,
+          price: price));
+      notifyListeners();
+    });
   }
 
   void updateProduct(
