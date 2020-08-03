@@ -48,58 +48,51 @@ class _EditProductScreenState extends State<EditProductScreen> {
     //if (_imageUrlTextController.text.isNotEmpty) setState(() {});
   }
 
-  void _submitForm() {
-    setState(() {
-      isLoading = true;
-    });
+  void _submitForm() async {
     if (_form.currentState.validate()) {
+      setState(() {
+        isLoading = true;
+      });
       _form.currentState.save();
-      if (id == null) {
-        Provider.of<ProductsProvider>(context, listen: false)
-            .addProduct(
-          title: title,
-          description: description,
-          imageUrl: url,
-          price: price,
-        )
-            .catchError((e) async {
-          print('////////////////////********//////////////////////');
-          print(e);
-          return showDialog<Null>(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('An error occurred'),
-              content: const Text('something gone wrong!'),
-              actions: [
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pop(null),
-                  child: const Text('OK'),
-                ),
-                //todo add retry
-              ],
-            ),
-          );
-        }).then((_) {
-          print('here');
-          setState(() {
-            isLoading = false;
-          });
-          Navigator.of(context).pop();
-        });
-      } else {
-        Provider.of<ProductsProvider>(context, listen: false).updateProduct(
-          id: id,
-          title: title,
-          description: description,
-          imageURl: url,
-          price: price,
-          isFavorite: isFavorite,
+      try {
+        id == null
+            ? await Provider.of<ProductsProvider>(context, listen: false)
+                .addProduct(
+                title: title,
+                description: description,
+                imageUrl: url,
+                price: price,
+              )
+            : await Provider.of<ProductsProvider>(context, listen: false)
+                .updateProduct(
+                id: id,
+                title: title,
+                description: description,
+                imageUrl: url,
+                price: price,
+                isFavorite: isFavorite,
+              );
+      } on Exception catch (e) {
+        return showDialog<Null>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('An error occurred'),
+            content: const Text('something gone wrong!'),
+            actions: [
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(null),
+                child: const Text('OK'),
+              ),
+              //todo add retry
+            ],
+          ),
         );
-        setState(() {
-          isLoading = false;
-        });
-        Navigator.of(context).pop();
+        print(e);
       }
+      setState(() {
+        isLoading = false;
+      });
+      Navigator.of(context).pop();
     }
     //todo
   }

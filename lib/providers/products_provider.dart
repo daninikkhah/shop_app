@@ -71,6 +71,7 @@ class ProductsProvider with ChangeNotifier {
     } on Exception catch (e) {
       print(e);
     }
+    notifyListeners();
   }
 
   Product getProductWhere({String id}) {
@@ -104,23 +105,41 @@ class ProductsProvider with ChangeNotifier {
     });
   }
 
-  void updateProduct(
+  Future<void> updateProduct(
       {String id,
       String title,
       String description,
-      String imageURl,
+      String imageUrl,
       double price,
-      bool isFavorite}) {
+      bool isFavorite}) async {
     int index = _productsList.indexWhere((product) => product.id == id);
-    _productsList[index] = Product(
-      id: id,
-      title: title,
-      description: description,
-      imageUrl: imageURl,
-      price: price,
-      isFavorite: isFavorite,
-    );
-    notifyListeners();
+
+    final String patchUrl =
+        'https://shop-app-f609c.firebaseio.com/products/$id.json';
+    try {
+      await http.patch(
+        patchUrl,
+        body: json.encode({
+          'title': title,
+          'description': description,
+          'imageUrl': imageUrl,
+          'price': price,
+        }),
+      );
+
+      _productsList[index] = Product(
+        id: id,
+        title: title,
+        description: description,
+        imageUrl: imageUrl,
+        price: price,
+        isFavorite: isFavorite,
+      );
+      notifyListeners();
+    } on Exception catch (e) {
+      print(e);
+      throw e;
+    }
   }
 
   void deleteProduct(String id) {
