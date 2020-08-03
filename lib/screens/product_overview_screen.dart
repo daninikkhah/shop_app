@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../providers/products_provider.dart';
 import '../widgets/product_GridView.dart';
 import '../widgets/badge.dart';
 import '../providers/cart.dart';
@@ -16,6 +17,22 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   bool bShowAll = true;
+  bool isLoading = false;
+  bool run = true;
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    if (run) {
+      isLoading = true;
+      Provider.of<ProductsProvider>(context)
+          .getDateFromServer()
+          .then((_) => isLoading = false);
+    }
+    run = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final Cart cart = Provider.of<Cart>(context, listen: false);
@@ -54,9 +71,11 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           )
         ],
       ),
-      body: ProductGridView(
-        showAll: bShowAll,
-      ),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ProductGridView(
+              showAll: bShowAll,
+            ),
     );
   }
 }

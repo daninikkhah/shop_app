@@ -25,12 +25,12 @@ class UserProductsScreen extends StatelessWidget {
       drawer: AppDrawer(),
       body: Consumer<ProductsProvider>(
         builder: (context, productsProvider, child) => ListView.builder(
-          itemCount: productsProvider.products.length,
+          itemCount: productsProvider.productsList.length,
           itemBuilder: (context, i) => UserProductTile(
-            id: productsProvider.products[i].id,
-            title: productsProvider.products[i].title,
-            imageUrl: productsProvider.products[i].imageUrl,
-            price: productsProvider.products[i].price,
+            id: productsProvider.productsList[i].id,
+            title: productsProvider.productsList[i].title,
+            imageUrl: productsProvider.productsList[i].imageUrl,
+            price: productsProvider.productsList[i].price,
           ),
         ),
       ),

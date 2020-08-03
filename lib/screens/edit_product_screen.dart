@@ -59,7 +59,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             .addProduct(
           title: title,
           description: description,
-          imageURl: url,
+          imageUrl: url,
           price: price,
         )
             .catchError((e) async {
