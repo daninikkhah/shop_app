@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'product.dart';
 
-const String url = 'https://shop-app-f609c.firebaseio.com/products.json';
+const String url = 'https://shop-app-f609c.firebaseio.com/products';
 
 class ProductsProvider with ChangeNotifier {
   List<Product> _products = [
@@ -47,17 +47,18 @@ class ProductsProvider with ChangeNotifier {
   }
 
   List<Product> get favoriteProducts {
-    print('get favorite products');
     return _products.where((product) => product.isFavorite).toList();
   }
+
+
 
   Product getProductWhere({String id}) {
     return products.firstWhere((product) => product.id == id);
   }
 
-  void addProduct(
+  Future<void> addProduct(
       {String title, String description, String imageURl, double price}) {
-    http
+    return http
         .post(
       url,
       body: json.encode({
@@ -68,14 +69,17 @@ class ProductsProvider with ChangeNotifier {
         'isFavorite': false,
       }),
     )
-        .then((value) {
+        .then((response) {
       _products.add(Product(
-          id: DateTime.now().toString(),
+          id: json.decode(response.body)['name'],
           title: title,
           description: description,
           imageUrl: imageURl,
           price: price));
       notifyListeners();
+    }).catchError((e) {
+      print(e);
+      throw e;
     });
   }
 

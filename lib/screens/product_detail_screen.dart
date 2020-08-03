@@ -29,7 +29,7 @@ class ProductDetailScreen extends StatelessWidget {
               height: 10,
             ),
             Text(
-              '\$$product.price',
+              '\$${product.price}',
               style: TextStyle(fontSize: 20, color: Colors.grey),
             ),
             const SizedBox(
