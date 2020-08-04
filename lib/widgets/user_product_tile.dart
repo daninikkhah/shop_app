@@ -13,8 +13,57 @@ class UserProductTile extends StatelessWidget {
   final String title;
   final String imageUrl;
   final double price;
+
+  void _delete({BuildContext context, ScaffoldState scaffold}) async {
+    bool condition;
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Are you sure?'),
+            titleTextStyle: TextStyle(color: Colors.black),
+            content: Text('Do you want to delete the product?'),
+            actions: [
+              FlatButton(
+                  onPressed: () {
+                    condition = true;
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Yes!')),
+              FlatButton(
+                  onPressed: () {
+                    condition = false;
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('No!')),
+            ],
+          );
+        });
+    if (condition) {
+      try {
+        await Provider.of<ProductsProvider>(context, listen: false)
+            .deleteProduct(id);
+        scaffold.hideCurrentSnackBar();
+        scaffold.showSnackBar(
+          SnackBar(
+            content: Text(
+                'product deleted successfully!'), //todo show after deleting
+          ),
+        );
+      } catch (e) {
+        scaffold.hideCurrentSnackBar();
+        scaffold.showSnackBar(
+          SnackBar(
+            content: Text('product deleting failed!'),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final ScaffoldState scaffold = Scaffold.of(context);
     return Column(
       children: [
         ListTile(
@@ -42,43 +91,8 @@ class UserProductTile extends StatelessWidget {
                       Icons.delete,
                       color: Theme.of(context).errorColor,
                     ),
-                    onPressed: () async {
-                      bool condition;
-                      await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text('Are you sure?'),
-                              titleTextStyle: TextStyle(color: Colors.black),
-                              content:
-                                  Text('Do you want to delete the product?'),
-                              actions: [
-                                FlatButton(
-                                    onPressed: () {
-                                      condition = true;
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Yes!')),
-                                FlatButton(
-                                    onPressed: () {
-                                      condition = false;
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('No!')),
-                              ],
-                            );
-                          });
-                      if (condition) {
-                        Scaffold.of(context).hideCurrentSnackBar();
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Product deleted!'),
-                          ),
-                        );
-                        Provider.of<ProductsProvider>(context, listen: false)
-                            .deleteProduct(id);
-                      }
-                    })
+                    onPressed: () =>
+                        _delete(context: context, scaffold: scaffold))
               ],
             ),
           ),

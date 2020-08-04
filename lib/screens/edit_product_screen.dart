@@ -72,7 +72,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 price: price,
                 isFavorite: isFavorite,
               );
-      } on Exception catch (e) {
+      } on Exception catch (_) {
         return showDialog<Null>(
           context: context,
           builder: (context) => AlertDialog(
@@ -87,7 +87,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ],
           ),
         );
-        print(e);
       }
       setState(() {
         isLoading = false;

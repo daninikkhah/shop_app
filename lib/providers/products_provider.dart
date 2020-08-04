@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'product.dart';
+import '../models/http_exception.dart';
 
 const String url = 'https://shop-app-f609c.firebaseio.com/products.json';
 
@@ -114,11 +115,11 @@ class ProductsProvider with ChangeNotifier {
       bool isFavorite}) async {
     int index = _productsList.indexWhere((product) => product.id == id);
 
-    final String patchUrl =
+    final String productUrl =
         'https://shop-app-f609c.firebaseio.com/products/$id.json';
     try {
-      await http.patch(
-        patchUrl,
+      var response = await http.patch(
+        productUrl,
         body: json.encode({
           'title': title,
           'description': description,
@@ -126,7 +127,6 @@ class ProductsProvider with ChangeNotifier {
           'price': price,
         }),
       );
-
       _productsList[index] = Product(
         id: id,
         title: title,
@@ -142,8 +142,20 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
-    _productsList.removeWhere((product) => product.id == id);
+  Future<void> deleteProduct(String id) async {
+    final String productUrl =
+        'https://shop-app-f609c.firebaseio.com/products/$id.json';
+    int index = _productsList.indexWhere((product) => product.id == id);
+    Product deletedProduct = _productsList[index];
     notifyListeners();
+    _productsList.removeAt(index);
+    notifyListeners();
+    var response = await http.delete(productUrl);
+    if (response.statusCode >= 400) {
+      _productsList.insert(index, deletedProduct);
+      notifyListeners();
+      throw HttpException(response.toString());
+    }
+    //notifyListeners();
   }
 }
