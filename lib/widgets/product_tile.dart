@@ -35,10 +35,10 @@ class ProductTile extends StatelessWidget {
                   product.isFavorite ? Icons.favorite : Icons.favorite_border,
                   color: Theme.of(context).accentColor,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   try {
-                    product.toggleFavorite();
-                  } on Exception catch (e) {
+                    await product.toggleFavorite();
+                  } catch (e) {
                     //Scaffold.of(context).hideCurrentSnackBar();
                     Scaffold.of(context).showSnackBar(
                         SnackBar(content: Text('process failed!')));
