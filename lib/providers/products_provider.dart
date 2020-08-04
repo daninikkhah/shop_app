@@ -60,11 +60,13 @@ class ProductsProvider with ChangeNotifier {
       extractedData.forEach((productID, productData) {
         _serverProducts.add(
           Product(
-              id: productID,
-              title: productData['title'],
-              description: productData['description'],
-              imageUrl: productData['imageUrl'],
-              price: productData['price']),
+            id: productID,
+            title: productData['title'],
+            description: productData['description'],
+            imageUrl: productData['imageUrl'],
+            price: productData['price'],
+            isFavorite: productData['isFavorite'],
+          ),
         );
       });
       _productsList = _serverProducts;
@@ -114,31 +116,32 @@ class ProductsProvider with ChangeNotifier {
       double price,
       bool isFavorite}) async {
     int index = _productsList.indexWhere((product) => product.id == id);
+    Product rollBackProduct = _productsList[index];
 
     final String productUrl =
         'https://shop-app-f609c.firebaseio.com/products/$id.json';
-    try {
-      var response = await http.patch(
-        productUrl,
-        body: json.encode({
-          'title': title,
-          'description': description,
-          'imageUrl': imageUrl,
-          'price': price,
-        }),
-      );
-      _productsList[index] = Product(
-        id: id,
-        title: title,
-        description: description,
-        imageUrl: imageUrl,
-        price: price,
-        isFavorite: isFavorite,
-      );
+    _productsList[index] = Product(
+      id: id,
+      title: title,
+      description: description,
+      imageUrl: imageUrl,
+      price: price,
+      isFavorite: isFavorite,
+    );
+    notifyListeners();
+    var response = await http.patch(
+      productUrl,
+      body: json.encode({
+        'title': title,
+        'description': description,
+        'imageUrl': imageUrl,
+        'price': price,
+      }),
+    );
+    if (response.statusCode >= 400) {
+      _productsList[index] = rollBackProduct;
       notifyListeners();
-    } on Exception catch (e) {
-      print(e);
-      throw e;
+      throw HttpException(response.statusCode.toString());
     }
   }
 
@@ -154,8 +157,9 @@ class ProductsProvider with ChangeNotifier {
     if (response.statusCode >= 400) {
       _productsList.insert(index, deletedProduct);
       notifyListeners();
+      deletedProduct = null; //this way dart will remove instance of product
       throw HttpException(response.toString());
     }
-    //notifyListeners();
+    deletedProduct = null; //will dart  delete deletedProduct??
   }
 }

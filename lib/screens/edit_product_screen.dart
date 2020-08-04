@@ -73,7 +73,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 isFavorite: isFavorite,
               );
       } on Exception catch (_) {
-        return showDialog<Null>(
+        setState(() {
+          isLoading = false;
+        });
+        await showDialog<Null>(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('An error occurred'),

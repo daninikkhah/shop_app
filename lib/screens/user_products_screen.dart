@@ -31,9 +31,7 @@ class UserProductsScreen extends StatelessWidget {
       body: RefreshIndicator(
         onRefresh: () => _refreshProducts(context),
         child: Consumer<ProductsProvider>(
-            builder: (context, productsProvider, child) {
-          print('rebuild');
-          return ListView.builder(
+          builder: (context, productsProvider, child) => ListView.builder(
             itemCount: productsProvider.productsList.length,
             itemBuilder: (context, i) => UserProductTile(
               id: productsProvider.productsList[i].id,
@@ -41,8 +39,8 @@ class UserProductsScreen extends StatelessWidget {
               imageUrl: productsProvider.productsList[i].imageUrl,
               price: productsProvider.productsList[i].price,
             ),
-          );
-        }),
+          ),
+        ),
       ),
     );
   }
