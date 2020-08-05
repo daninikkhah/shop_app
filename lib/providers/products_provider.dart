@@ -18,24 +18,25 @@ class ProductsProvider with ChangeNotifier {
     return _productsList.where((product) => product.isFavorite).toList();
   }
 
-  Future<void> getDateFromServer() async {
+  Future<void> fetchProductsFromServer() async {
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> _serverProducts = [];
 
-      extractedData.forEach((productID, productData) {
-        _serverProducts.add(
-          Product(
-            id: productID,
-            title: productData['title'],
-            description: productData['description'],
-            imageUrl: productData['imageUrl'],
-            price: productData['price'],
-            isFavorite: productData['isFavorite'],
-          ),
-        );
-      });
+      if (extractedData != null)
+        extractedData.forEach((productID, productData) {
+          _serverProducts.add(
+            Product(
+              id: productID,
+              title: productData['title'],
+              description: productData['description'],
+              imageUrl: productData['imageUrl'],
+              price: productData['price'],
+              isFavorite: productData['isFavorite'],
+            ),
+          );
+        });
       _productsList = _serverProducts;
       notifyListeners();
     } on Exception catch (e) {

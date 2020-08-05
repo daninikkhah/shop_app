@@ -10,6 +10,33 @@ class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
   List<OrderItem> get orders => [..._orders];
 
+  Future<void> fetchOrdersFromServer() async {
+    var response = await http.get(url);
+    Map<String, dynamic> extractedData = json.decode(response.body);
+    List<OrderItem> loadedOrders = [];
+    if (extractedData != null)
+      extractedData.forEach(
+        (id, orderData) {
+          loadedOrders.add(OrderItem(
+            id: id,
+            amount: orderData['totalAmount'],
+            time: DateTime.parse(orderData['time']),
+            products: (orderData['items'] as List<dynamic>)
+                .map(
+                  (productDate) => CartItem(
+                      id: productDate['id'],
+                      title: productDate['title'],
+                      price: productDate['price'],
+                      quantity: productDate['quantity']),
+                )
+                .toList(),
+          ));
+        },
+      );
+    _orders = loadedOrders.reversed.toList();
+    notifyListeners();
+  }
+
   Future<void> addOrder({List<CartItem> items, double totalAmount}) async {
     final DateTime time = DateTime.now();
     try {
@@ -21,6 +48,7 @@ class Orders with ChangeNotifier {
                     'id': cartItem.id,
                     'title': cartItem.title,
                     'price': cartItem.price,
+                    'quantity': cartItem.quantity
                   })
               .toList(),
           'totalAmount': totalAmount,

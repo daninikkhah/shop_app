@@ -27,7 +27,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
     if (run) {
       isLoading = true;
       Provider.of<ProductsProvider>(context)
-          .getDateFromServer()
+          .fetchProductsFromServer()
           .then((_) => isLoading = false);
     }
     run = false;
