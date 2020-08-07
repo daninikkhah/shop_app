@@ -10,6 +10,7 @@ import './providers/orders.dart';
 import './screens/orders_screen.dart';
 import './screens/user_products_screen.dart';
 import './screens/edit_product_screen.dart';
+import './screens/authentication_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         routes: {
+          AuthenticationScreen.route: (context) => AuthenticationScreen(),
           ProductOverviewScreen.route: (context) => ProductOverviewScreen(),
           ProductDetailScreen.route: (context) => ProductDetailScreen(),
           CartScreen.route: (context) => CartScreen(),
@@ -45,7 +47,7 @@ class MyApp extends StatelessWidget {
           UserProductsScreen.route: (context) => UserProductsScreen(),
           EditProductScreen.route: (context) => EditProductScreen(),
         },
-        home: ProductOverviewScreen(),
+        home: AuthenticationScreen(),
         //onUnknownRoute: (_)=>  ProductOverviewScreen(),
       ),
     );
