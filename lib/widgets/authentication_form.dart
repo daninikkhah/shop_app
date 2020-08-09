@@ -9,7 +9,9 @@ class AuthenticationForm extends StatefulWidget {
 
 class _AuthenticationFormState extends State<AuthenticationForm> {
   final FocusNode passFocusNode = FocusNode();
+  final FocusNode reEnterPassFocusNode = FocusNode();
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
+  AuthenticationMode authenticationMode = AuthenticationMode.Login;
 
   String mailValidator(String input) {
     if (input.contains('@')) return null;
@@ -23,6 +25,14 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
 
   void _submit() {
     _form.currentState.validate();
+  }
+
+  void switchAuthenticationMode() {
+    setState(() {
+      authenticationMode = authenticationMode == AuthenticationMode.Signup
+          ? AuthenticationMode.Login
+          : AuthenticationMode.Signup;
+    });
   }
 
   @override
@@ -41,10 +51,9 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
               TextFormField(
                 autofocus: true,
                 keyboardType: TextInputType.emailAddress,
-                validator: mailValidator, //todo see if it will work this way
+                validator: mailValidator,
                 decoration: InputDecoration(labelText: 'E-Mail'),
                 onFieldSubmitted: (_) {
-                  //todo run validator on field submit
                   FocusScope.of(context).requestFocus(passFocusNode);
                 },
               ),
@@ -54,7 +63,19 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
                 focusNode: passFocusNode,
                 validator: passValidator, //todo see if it will work this way
                 decoration: InputDecoration(labelText: 'Password'),
+                onFieldSubmitted: (value) {
+                  if (authenticationMode == AuthenticationMode.Signup)
+                    FocusScope.of(context).requestFocus(reEnterPassFocusNode);
+                },
               ),
+              if (authenticationMode == AuthenticationMode.Signup)
+                TextFormField(
+                  focusNode: reEnterPassFocusNode,
+                  obscureText: true,
+                  keyboardType: TextInputType.visiblePassword,
+                  decoration: InputDecoration(labelText: 'Repeat Password'),
+                  onFieldSubmitted: (_) => _submit,
+                ),
               const SizedBox(
                 height: 20,
               ),
@@ -66,14 +87,16 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
                     borderRadius: BorderRadius.circular(20)),
                 onPressed: _submit,
                 child: Text(
-                  'LOGIN',
+                  authenticationMode == AuthenticationMode.Login
+                      ? 'LOGIN'
+                      : 'SING UP',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
               FlatButton(
-                  onPressed: () {},
+                  onPressed: switchAuthenticationMode,
                   child: Text(
-                    'SIGNUP INSTEAD',
+                    '${authenticationMode == AuthenticationMode.Login ? 'SIGN UP' : 'LOGIN'} INSTEAD',
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ))
             ],

@@ -23,14 +23,8 @@ class AuthenticationScreen extends StatelessWidget {
                   stops: [0.1, 1]),
             ),
           ),
-          SingleChildScrollView(
-            child: Container(
-              width: size.width,
-              height: size.height,
-              child: Column(
-                children: [ShopLogo(), AuthenticationForm()],
-              ),
-            ),
+          Column(
+            children: [ShopLogo(), AuthenticationForm()],
           )
         ],
       )),
