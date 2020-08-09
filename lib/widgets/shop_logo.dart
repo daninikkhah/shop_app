@@ -8,8 +8,9 @@ class ShopLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+        width: MediaQuery.of(context).size.width * 0.8,
+        margin: const EdgeInsets.only(top: 60, bottom: 20, left: 20, right: 20),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         transform: Matrix4.rotationZ(-8 * pi / 180)..translate(-25.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -19,11 +20,13 @@ class ShopLogo extends StatelessWidget {
                 color: Colors.black54, blurRadius: 10, offset: Offset(2, 2)),
           ],
         ),
-        child: Text(
-          'Outland Shop',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.rockSalt().copyWith(
-              fontSize: 30, fontWeight: FontWeight.w900, color: Colors.white),
+        child: FittedBox(
+          child: Text(
+            'Outland Shop',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.rockSalt().copyWith(
+                fontSize: 30, fontWeight: FontWeight.w900, color: Colors.white),
+          ),
         ),
       ),
     );
