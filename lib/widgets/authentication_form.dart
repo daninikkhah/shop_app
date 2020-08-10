@@ -37,6 +37,8 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
   void _submit() async {
     if (!_form.currentState.validate()) return;
     _form.currentState.save();
+    print(email);
+    print(password);
     setState(() {
       isLoading = true;
     });
@@ -46,6 +48,8 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
           .signup(email, password);
     } else {
       //login
+      await Provider.of<Authentication>(context, listen: false)
+          .signIn(email, password);
     }
     setState(() {
       isLoading = false;
