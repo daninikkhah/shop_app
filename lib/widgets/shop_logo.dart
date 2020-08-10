@@ -8,13 +8,14 @@ class ShopLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
+        width: MediaQuery.of(context).size.width * 0.7,
         margin: const EdgeInsets.only(top: 60, bottom: 20, left: 20, right: 20),
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         transform: Matrix4.rotationZ(-8 * pi / 180)..translate(-25.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.deepOrange[700],
+          color: Color.fromRGBO(255, 188, 117, 0.9),
+          //color: Colors.deepOrange[700],
           boxShadow: [
             BoxShadow(
                 color: Colors.black54, blurRadius: 10, offset: Offset(2, 2)),
@@ -24,8 +25,10 @@ class ShopLogo extends StatelessWidget {
           child: Text(
             'Outland Shop',
             textAlign: TextAlign.center,
-            style: GoogleFonts.rockSalt().copyWith(
-                fontSize: 30, fontWeight: FontWeight.w900, color: Colors.white),
+            style: GoogleFonts.nosifer().copyWith(
+                fontSize: 30,
+                fontWeight: FontWeight.w900,
+                color: Colors.red[900]),
           ),
         ),
       ),

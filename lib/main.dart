@@ -11,6 +11,7 @@ import './screens/orders_screen.dart';
 import './screens/user_products_screen.dart';
 import './screens/edit_product_screen.dart';
 import './screens/authentication_screen.dart';
+import './providers/authentication.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,7 +28,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => Orders(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Authentication(),
+        ),
       ],
       child: MaterialApp(
         theme: ThemeData(
