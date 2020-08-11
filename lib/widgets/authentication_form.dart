@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/authentication.dart';
+import '../models/http_exception.dart';
 
 enum AuthenticationMode { Login, Signup }
 
@@ -42,15 +43,45 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
     setState(() {
       isLoading = true;
     });
-    if (authenticationMode == AuthenticationMode.Signup) {
-      //signup
-      await Provider.of<Authentication>(context, listen: false)
-          .signup(email, password);
-    } else {
-      //login
-      await Provider.of<Authentication>(context, listen: false)
-          .signIn(email, password);
+
+    try {
+      if (authenticationMode == AuthenticationMode.Signup) {
+        //signup
+        await Provider.of<Authentication>(context, listen: false)
+            .signup(email, password);
+      } else {
+        //login
+        await Provider.of<Authentication>(context, listen: false)
+            .signIn(email, password);
+      }
+    } on HttpException catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Oops!'),
+          content: Text('authentication failed!'),
+          actions: [
+            FlatButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Okay'))
+          ],
+        ),
+      );
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Oops!'),
+          content: Text('something went wrong!'),
+          actions: [
+            FlatButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Okay'))
+          ],
+        ),
+      );
     }
+
     setState(() {
       isLoading = false;
     });
