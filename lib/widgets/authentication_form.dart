@@ -38,8 +38,6 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
   void _submit() async {
     if (!_form.currentState.validate()) return;
     _form.currentState.save();
-    print(email);
-    print(password);
     setState(() {
       isLoading = true;
     });
@@ -55,6 +53,7 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
             .signIn(email, password);
       }
     } on HttpException catch (e) {
+      print(e);
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -68,6 +67,7 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
         ),
       );
     } catch (e) {
+      print(e);
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

@@ -33,27 +33,32 @@ class MyApp extends StatelessWidget {
           create: (context) => Authentication(),
         ),
       ],
-      child: MaterialApp(
-        theme: ThemeData(
-          primarySwatch: Colors.purple,
-          accentColor: Colors.deepOrange,
-          fontFamily: GoogleFonts.ptSerif().fontFamily,
-          textTheme: TextTheme(
-            headline6: TextStyle(color: Colors.white),
-          ),
-        ),
-        routes: {
-          AuthenticationScreen.route: (context) => AuthenticationScreen(),
-          ProductOverviewScreen.route: (context) => ProductOverviewScreen(),
-          ProductDetailScreen.route: (context) => ProductDetailScreen(),
-          CartScreen.route: (context) => CartScreen(),
-          OrdersScreen.route: (context) => OrdersScreen(),
-          UserProductsScreen.route: (context) => UserProductsScreen(),
-          EditProductScreen.route: (context) => EditProductScreen(),
-        },
-        home: AuthenticationScreen(),
-        //onUnknownRoute: (_)=>  ProductOverviewScreen(),
-      ),
+      child: Consumer<Authentication>(
+          builder: (context, auth, child) => MaterialApp(
+                theme: ThemeData(
+                  primarySwatch: Colors.purple,
+                  accentColor: Colors.deepOrange,
+                  fontFamily: GoogleFonts.ptSerif().fontFamily,
+                  textTheme: TextTheme(
+                    headline6: TextStyle(color: Colors.white),
+                  ),
+                ),
+                routes: {
+                  AuthenticationScreen.route: (context) =>
+                      AuthenticationScreen(),
+                  ProductOverviewScreen.route: (context) =>
+                      ProductOverviewScreen(),
+                  ProductDetailScreen.route: (context) => ProductDetailScreen(),
+                  CartScreen.route: (context) => CartScreen(),
+                  OrdersScreen.route: (context) => OrdersScreen(),
+                  UserProductsScreen.route: (context) => UserProductsScreen(),
+                  EditProductScreen.route: (context) => EditProductScreen(),
+                },
+                home: auth.isAuthenticated
+                    ? ProductOverviewScreen()
+                    : AuthenticationScreen(),
+                //onUnknownRoute: (_)=>  ProductOverviewScreen(),
+              )),
     );
   }
 }
