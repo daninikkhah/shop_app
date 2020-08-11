@@ -24,7 +24,7 @@ class ProductsProvider with ChangeNotifier {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> _serverProducts = [];
 
-      if (extractedData != null)
+      if (extractedData != null && extractedData['error'] == null) {
         extractedData.forEach((productID, productData) {
           _serverProducts.add(
             Product(
@@ -37,9 +37,10 @@ class ProductsProvider with ChangeNotifier {
             ),
           );
         });
+      }
       _productsList = _serverProducts;
       notifyListeners();
-    } on Exception catch (e) {
+    } catch (e) {
       print(e);
     }
     notifyListeners();
