@@ -4,10 +4,17 @@ import 'package:http/http.dart' as http;
 import 'product.dart';
 import '../models/http_exception.dart';
 
-const String url = 'https://shop-app-f609c.firebaseio.com/products.json';
-
 class ProductsProvider with ChangeNotifier {
+  ProductsProvider();
+  String _authenticationToken = ''; //todo is this okay?
   List<Product> _productsList = [];
+
+  String url = 'https://shop-app-f609c.firebaseio.com/products.json';
+
+  void getAuthToken(String token) {
+    url = 'https://shop-app-f609c.firebaseio.com/products.json?auth=$token';
+    notifyListeners();
+  }
 
   //TODO add update method to react to Product changes
   List<Product> get productsList {

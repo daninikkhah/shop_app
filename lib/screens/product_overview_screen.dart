@@ -29,8 +29,8 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
       Provider.of<ProductsProvider>(context)
           .fetchProductsFromServer()
           .then((_) => isLoading = false);
+      run = false;
     }
-    run = false;
   }
 
   @override
