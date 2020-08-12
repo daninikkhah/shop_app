@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product.dart';
 import '../providers/cart.dart';
+import '../providers/authentication.dart';
 import '../screens/product_detail_screen.dart';
 
 class ProductTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final String _token = Provider.of<Authentication>(context).token;
     final Product product = Provider.of<Product>(context, listen: false);
     final Cart cart = Provider.of<Cart>(context);
     return ClipRRect(
@@ -37,7 +39,7 @@ class ProductTile extends StatelessWidget {
                 ),
                 onPressed: () async {
                   try {
-                    await product.toggleFavorite();
+                    await product.toggleFavorite(_token);
                   } catch (e) {
                     //Scaffold.of(context).hideCurrentSnackBar();
                     Scaffold.of(context).showSnackBar(

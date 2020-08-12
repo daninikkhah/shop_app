@@ -4,12 +4,18 @@ import 'package:http/http.dart' as http;
 import '../models/order_item.dart';
 import '../models/cart_item.dart';
 
-const String url = 'https://shop-app-f609c.firebaseio.com/orders.json';
-
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
   List<OrderItem> get orders => [..._orders];
 
+  String url = 'https://shop-app-f609c.firebaseio.com/orders.json';
+
+  void getAuthToken(String token) {
+    url = 'https://shop-app-f609c.firebaseio.com/orders.json?auth=$token';
+    notifyListeners();
+  }
+
+  //todo add exception handling
   Future<void> fetchOrdersFromServer() async {
     var response = await http.get(url);
     Map<String, dynamic> extractedData = json.decode(response.body);

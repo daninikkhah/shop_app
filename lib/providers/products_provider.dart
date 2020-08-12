@@ -6,12 +6,13 @@ import '../models/http_exception.dart';
 
 class ProductsProvider with ChangeNotifier {
   ProductsProvider();
-  String _authenticationToken = ''; //todo is this okay?
   List<Product> _productsList = [];
 
   String url = 'https://shop-app-f609c.firebaseio.com/products.json';
+  String _token = '';
 
   void getAuthToken(String token) {
+    _token = token;
     url = 'https://shop-app-f609c.firebaseio.com/products.json?auth=$token';
     notifyListeners();
   }
@@ -95,7 +96,7 @@ class ProductsProvider with ChangeNotifier {
     Product rollBackProduct = _productsList[index];
 
     final String productUrl =
-        'https://shop-app-f609c.firebaseio.com/products/$id.json';
+        'https://shop-app-f609c.firebaseio.com/products/$id.json?auth=$_token';
     _productsList[index] = Product(
       id: id,
       title: title,
@@ -123,7 +124,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     final String productUrl =
-        'https://shop-app-f609c.firebaseio.com/products/$id.json';
+        'https://shop-app-f609c.firebaseio.com/products/$id.json?auth=$_token';
     int index = _productsList.indexWhere((product) => product.id == id);
     Product deletedProduct = _productsList[index];
     notifyListeners();

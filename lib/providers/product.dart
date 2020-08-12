@@ -19,9 +19,10 @@ class Product with ChangeNotifier {
   final double price;
   bool isFavorite;
 
-  Future<void> toggleFavorite() async {
-    final String url =
-        'https://shop-app-f609c.firebaseio.com/products/$id.json';
+  //todo add exception handling
+  Future<void> toggleFavorite(String token) async {
+    String url =
+        'https://shop-app-f609c.firebaseio.com/products/$id.json?auth=$token';
     isFavorite = !isFavorite;
     notifyListeners();
     var response =
