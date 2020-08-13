@@ -52,8 +52,8 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
         await Provider.of<Authentication>(context, listen: false)
             .signIn(email, password);
       }
-    } on HttpException catch (e) {
-      print(e);
+    } on HttpException catch (_) {
+      //print(e);
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -67,7 +67,7 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
         ),
       );
     } catch (e) {
-      print(e);
+      //print(e);
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

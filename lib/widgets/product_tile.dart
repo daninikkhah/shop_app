@@ -8,7 +8,7 @@ import '../screens/product_detail_screen.dart';
 class ProductTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final String _token = Provider.of<Authentication>(context).token;
+    final Authentication _auth = Provider.of<Authentication>(context);
     final Product product = Provider.of<Product>(context, listen: false);
     final Cart cart = Provider.of<Cart>(context);
     return ClipRRect(
@@ -39,7 +39,8 @@ class ProductTile extends StatelessWidget {
                 ),
                 onPressed: () async {
                   try {
-                    await product.toggleFavorite(_token);
+                    await product.toggleFavorite(
+                        token: _auth.token, userId: _auth.id);
                   } catch (e) {
                     //Scaffold.of(context).hideCurrentSnackBar();
                     Scaffold.of(context).showSnackBar(

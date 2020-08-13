@@ -19,6 +19,8 @@ class Authentication with ChangeNotifier {
     return null;
   }
 
+  String get id => _id;
+
   bool get isAuthenticated => token == null ? false : true;
 
   Future<void> _authentication(
@@ -32,7 +34,6 @@ class Authentication with ChangeNotifier {
           'returnSecureToken': true,
         }),
       );
-      //print(response.body);
       final responseData = json.decode(response.body);
       if (responseData['error'] != null)
         throw HttpException(responseData['error']['message']);

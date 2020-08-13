@@ -19,18 +19,23 @@ class Product with ChangeNotifier {
   final double price;
   bool isFavorite;
 
-  //todo add exception handling
-  Future<void> toggleFavorite(String token) async {
+  Future<void> toggleFavorite({String token, String userId}) async {
     String url =
-        'https://shop-app-f609c.firebaseio.com/products/$id.json?auth=$token';
+        'https://shop-app-f609c.firebaseio.com/userFavorites/$userId/$id.json?auth=$token';
+    bool favoriteState = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
-    var response =
-        await http.patch(url, body: json.encode({'isFavorite': isFavorite}));
-    if (response.statusCode >= 400) {
-      isFavorite = !isFavorite;
+    try {
+      var response = await http.put(url, body: json.encode(isFavorite));
+      if (response.statusCode >= 400) {
+        isFavorite = favoriteState;
+        notifyListeners();
+        throw HttpException(response.statusCode.toString());
+      }
+    } catch (e) {
+      isFavorite = favoriteState;
       notifyListeners();
-      throw HttpException(response.statusCode.toString());
+      throw e;
     }
 //    print(isFavorite);
   }

@@ -10,9 +10,11 @@ class ProductsProvider with ChangeNotifier {
 
   String url = 'https://shop-app-f609c.firebaseio.com/products.json';
   String _token = '';
+  String _userId;
 
-  void getAuthToken(String token) {
+  void getAuthToken(String token, String userId) {
     _token = token;
+    _userId = userId;
     url = 'https://shop-app-f609c.firebaseio.com/products.json?auth=$token';
     notifyListeners();
   }
@@ -28,9 +30,13 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> fetchProductsFromServer() async {
     try {
-      final response = await http.get(url);
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> _serverProducts = [];
+      var response = await http.get(url);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      url =
+          'https://shop-app-f609c.firebaseio.com/userFavorites/$_userId.json?auth=$_token';
+      final favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body);
 
       if (extractedData != null && extractedData['error'] == null) {
         extractedData.forEach((productID, productData) {
@@ -41,7 +47,10 @@ class ProductsProvider with ChangeNotifier {
               description: productData['description'],
               imageUrl: productData['imageUrl'],
               price: productData['price'],
-              isFavorite: productData['isFavorite'],
+              isFavorite: favoriteData == null
+                  ? productData['isFavorite'] ??
+                      false //  will set some products favorite  for everyone
+                  : favoriteData[productID] ?? false,
             ),
           );
         });
@@ -68,7 +77,7 @@ class ProductsProvider with ChangeNotifier {
         'description': description,
         'imageUrl': imageUrl,
         'price': price,
-        'isFavorite': false,
+        //'isFavorite': false,
       }),
     )
         .then((response) {
