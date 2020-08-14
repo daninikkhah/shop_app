@@ -10,8 +10,9 @@ class Orders with ChangeNotifier {
 
   String url = 'https://shop-app-f609c.firebaseio.com/orders.json';
 
-  void getAuthToken(String token) {
-    url = 'https://shop-app-f609c.firebaseio.com/orders.json?auth=$token';
+  void getAuthToken({String token, String userId}) {
+    url =
+        'https://shop-app-f609c.firebaseio.com/orders/$userId.json?auth=$token';
     notifyListeners();
   }
 
