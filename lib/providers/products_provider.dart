@@ -7,15 +7,12 @@ import '../models/http_exception.dart';
 class ProductsProvider with ChangeNotifier {
   ProductsProvider();
   List<Product> _productsList = [];
-
-  String url = 'https://shop-app-f609c.firebaseio.com/products.json';
   String _token = '';
   String _userId;
 
   void getAuthToken(String token, String userId) {
     _token = token;
     _userId = userId;
-    url = 'https://shop-app-f609c.firebaseio.com/products.json?auth=$token';
     notifyListeners();
   }
 
@@ -28,10 +25,14 @@ class ProductsProvider with ChangeNotifier {
     return _productsList.where((product) => product.isFavorite).toList();
   }
 
-  Future<void> fetchProductsFromServer() async {
+  Future<void> fetchProductsFromServer({bool filterByCreator = false}) async {
+    //print(filterByUser ? 'filter by user' : 'show all');
+    String url = filterByCreator
+        ? 'https://shop-app-f609c.firebaseio.com/products.json?auth=$_token&orderBy="creatorId"&equalTo="$_userId"'
+        : 'https://shop-app-f609c.firebaseio.com/products.json?auth=$_token';
     try {
       final List<Product> _serverProducts = [];
-      var response = await http.get(url);
+      final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       url =
           'https://shop-app-f609c.firebaseio.com/userFavorites/$_userId.json?auth=$_token';
@@ -69,6 +70,8 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> addProduct(
       {String title, String description, String imageUrl, double price}) {
+    String url =
+        'https://shop-app-f609c.firebaseio.com/products.json?auth=$_token';
     return http
         .post(
       url,
@@ -77,7 +80,7 @@ class ProductsProvider with ChangeNotifier {
         'description': description,
         'imageUrl': imageUrl,
         'price': price,
-        //'isFavorite': false,
+        'creatorId': _userId,
       }),
     )
         .then((response) {
