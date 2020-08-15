@@ -13,6 +13,7 @@ class Authentication with ChangeNotifier {
   String _token;
   String _id;
   DateTime _expiryDate;
+  Timer _timer;
 
   String get token {
     if (_expiryDate != null && _expiryDate.isAfter(DateTime.now()))
@@ -43,6 +44,7 @@ class Authentication with ChangeNotifier {
       _token = responseData['idToken'];
       _id = responseData['localId'];
       _expiryDate = DateTime.now().add(_timeToExpiry);
+      autoLogout(_timeToExpiry);
       notifyListeners();
     } catch (e) {
       throw e;
@@ -59,6 +61,8 @@ class Authentication with ChangeNotifier {
     _expiryDate = null;
     _token = null;
     _id = null;
+    if (_timer != null) _timer.cancel();
+    _timer = null;
     notifyListeners();
   }
 
