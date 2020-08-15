@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
+import 'dart:async';
 import 'package:http/http.dart' as http;
 import '../models/http_exception.dart';
 
@@ -37,10 +38,11 @@ class Authentication with ChangeNotifier {
       final responseData = json.decode(response.body);
       if (responseData['error'] != null)
         throw HttpException(responseData['error']['message']);
+      Duration _timeToExpiry =
+          Duration(seconds: int.parse(responseData['expiresIn']));
       _token = responseData['idToken'];
       _id = responseData['localId'];
-      _expiryDate = DateTime.now()
-          .add(Duration(seconds: int.parse(responseData['expiresIn'])));
+      _expiryDate = DateTime.now().add(_timeToExpiry);
       notifyListeners();
     } catch (e) {
       throw e;
@@ -52,4 +54,15 @@ class Authentication with ChangeNotifier {
 
   Future<void> signIn(String email, String password) =>
       _authentication(url: signInUrl, email: email, password: password);
+
+  void logout() {
+    _expiryDate = null;
+    _token = null;
+    _id = null;
+    notifyListeners();
+  }
+
+  void autoLogout(Duration remainingTime) {
+    Timer(remainingTime, () => logout());
+  }
 }
