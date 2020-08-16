@@ -18,6 +18,9 @@ class ProductsProvider with ChangeNotifier {
 
   //TODO add update method to react to Product changes
   List<Product> get productsList {
+    _productsList.forEach((p) {
+      print(p.title);
+    });
     return [..._productsList];
   }
 
@@ -26,12 +29,13 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> fetchProductsFromServer({bool filterByCreator = false}) async {
-    //print(filterByUser ? 'filter by user' : 'show all');
+    print('products provider');
+
     String url = filterByCreator
         ? 'https://shop-app-f609c.firebaseio.com/products.json?auth=$_token&orderBy="creatorId"&equalTo="$_userId"'
         : 'https://shop-app-f609c.firebaseio.com/products.json?auth=$_token';
     try {
-      final List<Product> _serverProducts = [];
+      final List<Product> serverProducts = [];
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       url =
@@ -41,7 +45,7 @@ class ProductsProvider with ChangeNotifier {
 
       if (extractedData != null && extractedData['error'] == null) {
         extractedData.forEach((productID, productData) {
-          _serverProducts.add(
+          serverProducts.add(
             Product(
               id: productID,
               title: productData['title'],
@@ -56,7 +60,10 @@ class ProductsProvider with ChangeNotifier {
           );
         });
       }
-      _productsList = _serverProducts;
+      _productsList = serverProducts;
+//      _productsList.forEach((p) {
+//        print(p.title);
+//      });
       notifyListeners();
     } catch (e) {
       print(e);

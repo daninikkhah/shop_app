@@ -9,10 +9,19 @@ class ProductGridView extends StatelessWidget {
   final bool showAll;
   @override
   Widget build(BuildContext context) {
+    print('ProductGridView');
+
     final List<Product> products = showAll
         ? Provider.of<ProductsProvider>(context, listen: false).productsList
         : Provider.of<ProductsProvider>(context, listen: false)
             .favoriteProducts;
+    products ?? print('NNNUUUUUUUUUUUUUULLLLL');
+    print(products);
+    print(products.length);
+    products.forEach((p) {
+      print(p.title);
+    });
+    print('end//////////////////////////////////////////////');
     return GridView.builder(
       padding: const EdgeInsets.all(10),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

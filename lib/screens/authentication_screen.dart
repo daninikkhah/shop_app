@@ -6,7 +6,6 @@ class AuthenticationScreen extends StatelessWidget {
   static const String route = 'shop_app/screens/authentication_screen.dart';
   @override
   Widget build(BuildContext context) {
-    //final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
           child: Stack(
