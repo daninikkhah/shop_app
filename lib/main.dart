@@ -17,26 +17,30 @@ import './screens/loading_screen.dart';
 import './providers/authentication.dart';
 
 void main() {
+  //SharedPreferences.setMockInitialValues({});
+
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print('build MyApp');
     Widget buildHome(Authentication auth) {
-      //print('here');
+      print('build home');
+      print(auth.isAuthenticated);
       if (auth.isAuthenticated) {
-        //print('ProductOverviewScreen');
+        print('ProductOverviewScreen');
         return ProductOverviewScreen();
       } else {
-        //print('FutureBuilder');
+        print('FutureBuilder');
         return FutureBuilder(
             future: auth.autoLogin(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                //print('LoadingScreen');
+                print('LoadingScreen');
                 return LoadingScreen();
-              } else {
+              } else if (snapshot.connectionState == ConnectionState.done) {
 //                print('else');
 //                if (snapshot.connectionState == ConnectionState.none)
 //                  print('future = null');
@@ -44,9 +48,10 @@ class MyApp extends StatelessWidget {
 //                  print('done');
 //                if (snapshot.connectionState == ConnectionState.active)
 //                  print('active');
-//                print('AuthenticationScreen');
+                print('AuthenticationScreen');
                 return AuthenticationScreen();
               }
+              return null;
             });
       }
       //AuthenticationScreen(),

@@ -36,7 +36,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //print('building ProductOverviewScreen');
+    print('building ProductOverviewScreen');
     final Cart cart = Provider.of<Cart>(context, listen: false);
     return Scaffold(
       drawer: AppDrawer(),

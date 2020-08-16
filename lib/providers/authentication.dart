@@ -24,10 +24,7 @@ class Authentication with ChangeNotifier {
 
   String get id => _id;
 
-  bool get isAuthenticated {
-    print('isAuthenticated :${token == null ? false : true}');
-    return token == null ? false : true;
-  }
+  bool get isAuthenticated => token == null ? false : true;
 
   Future<void> _authentication(
       {String url, String email, String password}) async {
@@ -78,21 +75,21 @@ class Authentication with ChangeNotifier {
     _timer = null;
 
     notifyListeners();
-
-//    try {
-//      SharedPreferences sharedPreferences =
-//          await SharedPreferences.getInstance();
-//      await sharedPreferences.clear();
-//    } catch (e) {
-//      print('error : $e');
-//    }
+    try {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      await sharedPreferences.clear();
+    } catch (e) {
+      print('errrrrrroooooooooooorrrrrrrrrrr');
+      print(e);
+    }
   }
 
   void _autoLogout(Duration remainingTime) =>
       Timer(remainingTime, () => logout());
 
   Future<bool> autoLogin() async {
-    print('autoLogin');
+    print('autoLogin1');
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     if (!sharedPreferences.containsKey('authData')) return false;
@@ -100,12 +97,12 @@ class Authentication with ChangeNotifier {
     final authData = json.decode(jsonAuthData) as Map<String, Object>;
 
     final DateTime expiryDate = DateTime.parse(authData['expiryDate']);
-    print('autoLogin');
+    print('autoLogin2');
     if (expiryDate.isBefore(DateTime.now())) return false;
     final timeTOExpiry = expiryDate.difference(DateTime.now()).inSeconds;
     final String token = authData['token'];
     final String id = authData['id'];
-    print('autoLogin');
+    print('autoLogin3');
     _token = token;
     _id = id;
     _expiryDate = expiryDate;

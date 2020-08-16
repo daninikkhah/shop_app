@@ -97,6 +97,7 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
 
   @override
   Widget build(BuildContext context) {
+    print('build AuthenticationScreen');
     return Form(
         key: _form,
         child: Container(

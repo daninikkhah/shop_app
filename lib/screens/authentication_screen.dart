@@ -6,6 +6,7 @@ class AuthenticationScreen extends StatelessWidget {
   static const String route = 'shop_app/screens/authentication_screen.dart';
   @override
   Widget build(BuildContext context) {
+    print('build AuthenticationScreen');
     return Scaffold(
       body: SafeArea(
           child: Stack(
