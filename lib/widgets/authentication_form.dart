@@ -113,9 +113,7 @@ class _AuthenticationFormState extends State<AuthenticationForm>
         .animate(CurvedAnimation(
             parent: _containerSizeController,
             curve: Curves.fastLinearToSlowEaseIn));
-    _containerHeightAnimation.addListener(() {
-      setState(() {});
-    });
+
     super.initState();
   }
 
