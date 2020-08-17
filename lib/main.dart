@@ -22,42 +22,42 @@ void main() {
   runApp(MyApp());
 }
 
+//TODO Important fix fug : wont reach Authentication screen when logout from pages other then first loaded pge
 class MyApp extends StatelessWidget {
+//  Widget buildHome(BuildContext context, Authentication auth) {
+//    print('build home');
+//    print(auth.isAuthenticated);
+//    if (auth.isAuthenticated) {
+//      print('ProductOverviewScreen');
+//      return ProductOverviewScreen();
+//    } else {
+//      print('FutureBuilder');
+//      return FutureBuilder(
+//          future: auth.autoLogin(),
+//          builder: (context, snapshot) {
+//            if (snapshot.connectionState == ConnectionState.waiting) {
+//              print('LoadingScreen');
+//              return LoadingScreen();
+//            } else {
+//              //wont reach here pressing logout
+//              print('else');
+//              if (snapshot.connectionState == ConnectionState.none)
+//                print('future = null');
+//              if (snapshot.connectionState == ConnectionState.done)
+//                print('done');
+//              if (snapshot.connectionState == ConnectionState.active)
+//                print('active');
+//              print('AuthenticationScreen');
+//              return AuthenticationScreen();
+//            }
+//          });
+//    }
+//    //AuthenticationScreen(),
+//    //onUnknownRoute: (_)=>  ProductOverviewScreen(),
+//  }
+
   @override
   Widget build(BuildContext context) {
-    print('build MyApp');
-    Widget buildHome(Authentication auth) {
-      print('build home');
-      print(auth.isAuthenticated);
-      if (auth.isAuthenticated) {
-        print('ProductOverviewScreen');
-        return ProductOverviewScreen();
-      } else {
-        print('FutureBuilder');
-        return FutureBuilder(
-            future: auth.autoLogin(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                print('LoadingScreen');
-                return LoadingScreen();
-              } else if (snapshot.connectionState == ConnectionState.done) {
-//                print('else');
-//                if (snapshot.connectionState == ConnectionState.none)
-//                  print('future = null');
-//                if (snapshot.connectionState == ConnectionState.done)
-//                  print('done');
-//                if (snapshot.connectionState == ConnectionState.active)
-//                  print('active');
-                print('AuthenticationScreen');
-                return AuthenticationScreen();
-              }
-              return null;
-            });
-      }
-      //AuthenticationScreen(),
-      //onUnknownRoute: (_)=>  ProductOverviewScreen(),
-    }
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => Authentication()),
@@ -95,7 +95,15 @@ class MyApp extends StatelessWidget {
             UserProductsScreen.route: (context) => UserProductsScreen(),
             EditProductScreen.route: (context) => EditProductScreen(),
           },
-          home: buildHome(auth),
+          home: auth.isAuthenticated
+              ? ProductOverviewScreen()
+              : FutureBuilder(
+                  future: auth.autoLogin(),
+                  builder: (context, snapshot) =>
+                      snapshot.connectionState == ConnectionState.waiting
+                          ? LoadingScreen()
+                          : AuthenticationScreen(),
+                ),
           // onUnknownRoute: (_)=>  Navigator.of(context).pushNamed(ProductOverviewScreen.route)
         ),
       ),

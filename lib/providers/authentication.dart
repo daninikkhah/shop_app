@@ -88,21 +88,22 @@ class Authentication with ChangeNotifier {
   void _autoLogout(Duration remainingTime) =>
       Timer(remainingTime, () => logout());
 
-  Future<bool> autoLogin() async {
+  Future<void> autoLogin() async {
     print('autoLogin1');
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
+    print('autoLogin2');
     if (!sharedPreferences.containsKey('authData')) return false;
     final String jsonAuthData = sharedPreferences.getString('authData');
     final authData = json.decode(jsonAuthData) as Map<String, Object>;
 
     final DateTime expiryDate = DateTime.parse(authData['expiryDate']);
-    print('autoLogin2');
+    print('autoLogin3');
     if (expiryDate.isBefore(DateTime.now())) return false;
     final timeTOExpiry = expiryDate.difference(DateTime.now()).inSeconds;
     final String token = authData['token'];
     final String id = authData['id'];
-    print('autoLogin3');
+    print('autoLogin4');
     _token = token;
     _id = id;
     _expiryDate = expiryDate;
