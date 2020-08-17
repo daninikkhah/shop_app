@@ -99,7 +99,7 @@ class MyApp extends StatelessWidget {
               ? ProductOverviewScreen()
               : FutureBuilder(
                   future: auth.autoLogin(),
-                  builder: (context, snapshot) =>
+                  builder: (context, snapshot) => //snapshot.data == null
                       snapshot.connectionState == ConnectionState.waiting
                           ? LoadingScreen()
                           : AuthenticationScreen(),

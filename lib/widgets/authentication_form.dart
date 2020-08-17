@@ -10,7 +10,8 @@ class AuthenticationForm extends StatefulWidget {
   _AuthenticationFormState createState() => _AuthenticationFormState();
 }
 
-class _AuthenticationFormState extends State<AuthenticationForm> {
+class _AuthenticationFormState extends State<AuthenticationForm>
+    with SingleTickerProviderStateMixin {
   final FocusNode passFocusNode = FocusNode();
   final FocusNode reEnterPassFocusNode = FocusNode();
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
@@ -19,6 +20,9 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
   String email;
   String password;
   bool isLoading = false;
+
+  AnimationController _containerSizeController;
+  Animation<Size> _containerHeightAnimation;
 
   String mailValidator(String input) {
     if (input.contains('@')) return null;
@@ -93,6 +97,32 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
           ? AuthenticationMode.Login
           : AuthenticationMode.Signup;
     });
+    authenticationMode == AuthenticationMode.Signup
+        ? _containerSizeController.forward()
+        : _containerSizeController.reverse();
+  }
+
+  @override
+  void initState() {
+    _containerSizeController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 400),
+    );
+    _containerHeightAnimation = Tween<Size>(
+            begin: Size(double.infinity, 260), end: Size(double.infinity, 320))
+        .animate(CurvedAnimation(
+            parent: _containerSizeController,
+            curve: Curves.fastLinearToSlowEaseIn));
+    _containerHeightAnimation.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -101,6 +131,9 @@ class _AuthenticationFormState extends State<AuthenticationForm> {
     return Form(
         key: _form,
         child: Container(
+          height: _containerHeightAnimation.value.height,
+          constraints:
+              BoxConstraints(minHeight: _containerHeightAnimation.value.height),
           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           decoration: BoxDecoration(

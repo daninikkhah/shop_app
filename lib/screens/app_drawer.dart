@@ -4,6 +4,7 @@ import '../providers/authentication.dart';
 import './product_overview_screen.dart';
 import '../screens/orders_screen.dart';
 import '../screens/user_products_screen.dart';
+import '../screens/authentication_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -47,6 +48,8 @@ class AppDrawer extends StatelessWidget {
               Navigator.of(context).pop();
 //              Navigator.pushReplacementNamed(context,
 //                  ProductOverviewScreen.route); //todo why it is needed??
+              //Navigator.of(context).pushReplacementNamed(AuthenticationScreen.route);
+              // todo what happens when running a new screen without navigator??
               Provider.of<Authentication>(context, listen: false).logout();
             },
           ),

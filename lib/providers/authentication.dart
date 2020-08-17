@@ -80,7 +80,6 @@ class Authentication with ChangeNotifier {
           await SharedPreferences.getInstance();
       await sharedPreferences.clear();
     } catch (e) {
-      print('errrrrrroooooooooooorrrrrrrrrrr');
       print(e);
     }
   }
