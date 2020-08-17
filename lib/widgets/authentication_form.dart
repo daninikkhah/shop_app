@@ -122,6 +122,7 @@ class _AuthenticationFormState extends State<AuthenticationForm>
   @override
   void dispose() {
     // TODO: implement dispose
+    _containerSizeController.dispose();
     super.dispose();
   }
 
@@ -130,15 +131,19 @@ class _AuthenticationFormState extends State<AuthenticationForm>
     print('build AuthenticationScreen');
     return Form(
         key: _form,
-        child: Container(
-          height: _containerHeightAnimation.value.height,
-          constraints:
-              BoxConstraints(minHeight: _containerHeightAnimation.value.height),
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
+        child: AnimatedBuilder(
+          animation: _containerHeightAnimation,
+          builder: (context, child) => Container(
+            child: child,
+            height: _containerHeightAnimation.value.height,
+            constraints: BoxConstraints(
+                minHeight: _containerHeightAnimation.value.height),
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
           ),
           child: Column(
             children: [

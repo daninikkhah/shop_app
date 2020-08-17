@@ -4,7 +4,6 @@ import '../providers/authentication.dart';
 import './product_overview_screen.dart';
 import '../screens/orders_screen.dart';
 import '../screens/user_products_screen.dart';
-import '../screens/authentication_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   @override

@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import './screens/product_overview_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import './screens/product_detail_screen.dart';
 import './providers/products_provider.dart';
 import './screens/cart_screen.dart';
