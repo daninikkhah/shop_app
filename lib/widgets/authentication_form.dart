@@ -21,9 +21,6 @@ class _AuthenticationFormState extends State<AuthenticationForm>
   String password;
   bool isLoading = false;
 
-  AnimationController _containerSizeController;
-  Animation<Size> _containerHeightAnimation;
-
   String mailValidator(String input) {
     if (input.contains('@')) return null;
     return 'Please enter a valid E-Mail.';
@@ -97,117 +94,88 @@ class _AuthenticationFormState extends State<AuthenticationForm>
           ? AuthenticationMode.Login
           : AuthenticationMode.Signup;
     });
-    authenticationMode == AuthenticationMode.Signup
-        ? _containerSizeController.forward()
-        : _containerSizeController.reverse();
-  }
-
-  @override
-  void initState() {
-    _containerSizeController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 400),
-    );
-    _containerHeightAnimation = Tween<Size>(
-            begin: Size(double.infinity, 260), end: Size(double.infinity, 320))
-        .animate(CurvedAnimation(
-            parent: _containerSizeController,
-            curve: Curves.fastLinearToSlowEaseIn));
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _containerSizeController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     print('build AuthenticationScreen');
     return Form(
-        key: _form,
-        child: AnimatedBuilder(
-          animation: _containerHeightAnimation,
-          builder: (context, child) => Container(
-            child: child,
-            height: _containerHeightAnimation.value.height,
-            constraints: BoxConstraints(
-                minHeight: _containerHeightAnimation.value.height),
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
+      key: _form,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 400),
+        curve: Curves.easeIn,
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          children: [
+            TextFormField(
+              autofocus: true,
+              keyboardType: TextInputType.emailAddress,
+              validator: mailValidator,
+              decoration: InputDecoration(labelText: 'E-Mail'),
+              onFieldSubmitted: (value) {
+                FocusScope.of(context).requestFocus(passFocusNode);
+                email = value;
+              },
+              onSaved: (value) => email = value,
             ),
-          ),
-          child: Column(
-            children: [
+            TextFormField(
+              keyboardType: TextInputType.visiblePassword,
+              obscureText: true,
+              focusNode: passFocusNode,
+              validator: passValidator,
+              decoration: InputDecoration(labelText: 'Password'),
+              controller: passController,
+              onFieldSubmitted: (value) {
+                if (authenticationMode == AuthenticationMode.Signup)
+                  FocusScope.of(context).requestFocus(reEnterPassFocusNode);
+                password = passController.text;
+              },
+              onSaved: (_) => password = passController.text,
+            ),
+            if (authenticationMode == AuthenticationMode.Signup)
               TextFormField(
-                autofocus: true,
-                keyboardType: TextInputType.emailAddress,
-                validator: mailValidator,
-                decoration: InputDecoration(labelText: 'E-Mail'),
-                onFieldSubmitted: (value) {
-                  FocusScope.of(context).requestFocus(passFocusNode);
-                  email = value;
-                },
-                onSaved: (value) => email = value,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.visiblePassword,
+                focusNode: reEnterPassFocusNode,
                 obscureText: true,
-                focusNode: passFocusNode,
-                validator: passValidator,
-                decoration: InputDecoration(labelText: 'Password'),
-                controller: passController,
-                onFieldSubmitted: (value) {
-                  if (authenticationMode == AuthenticationMode.Signup)
-                    FocusScope.of(context).requestFocus(reEnterPassFocusNode);
-                  password = passController.text;
-                },
-                onSaved: (_) => password = passController.text,
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.done,
+                validator: reEnterPassValidator,
+                decoration: InputDecoration(labelText: 'Repeat Password'),
+                onFieldSubmitted: (_) => _submit(),
               ),
-              if (authenticationMode == AuthenticationMode.Signup)
-                TextFormField(
-                  focusNode: reEnterPassFocusNode,
-                  obscureText: true,
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.done,
-                  validator: reEnterPassValidator,
-                  decoration: InputDecoration(labelText: 'Repeat Password'),
-                  onFieldSubmitted: (_) => _submit(),
-                ),
-              const SizedBox(
-                height: 20,
-              ),
-              isLoading
-                  ? CircularProgressIndicator()
-                  : RaisedButton(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                      color: Theme.of(context).primaryColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      onPressed: _submit,
-                      child: Text(
-                        authenticationMode == AuthenticationMode.Login
-                            ? 'LOGIN'
-                            : 'SING UP',
-                        style: TextStyle(color: Colors.white),
-                      ),
+            const SizedBox(
+              height: 20,
+            ),
+            isLoading
+                ? CircularProgressIndicator()
+                : RaisedButton(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    color: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    onPressed: _submit,
+                    child: Text(
+                      authenticationMode == AuthenticationMode.Login
+                          ? 'LOGIN'
+                          : 'SING UP',
+                      style: TextStyle(color: Colors.white),
                     ),
-              FlatButton(
-                  onPressed: switchAuthenticationMode,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  child: Text(
-                    '${authenticationMode == AuthenticationMode.Login ? 'SIGN UP' : 'LOGIN'} INSTEAD',
-                    style: TextStyle(color: Theme.of(context).primaryColor),
-                  ))
-            ],
-          ),
-        ));
+                  ),
+            FlatButton(
+                onPressed: switchAuthenticationMode,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                child: Text(
+                  '${authenticationMode == AuthenticationMode.Login ? 'SIGN UP' : 'LOGIN'} INSTEAD',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ))
+          ],
+        ),
+      ),
+    );
   }
 }
