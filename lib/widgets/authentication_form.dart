@@ -126,80 +126,87 @@ class _AuthenticationFormState extends State<AuthenticationForm>
     return Form(
       key: _form,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 5000),
-        curve: Curves.slowMiddle,
+        duration: Duration(milliseconds: 400),
+        curve: Curves.linear,
+        height: authenticationMode == AuthenticationMode.Login ? 260 : 320,
+//        constraints: BoxConstraints(
+//            minHeight:
+//                authenticationMode == AuthenticationMode.Login ? 260 : 320),
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Column(
-          children: [
-            TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              validator: mailValidator,
-              decoration: InputDecoration(labelText: 'E-Mail'),
-              onFieldSubmitted: (value) {
-                FocusScope.of(context).requestFocus(passFocusNode);
-                email = value;
-              },
-              onSaved: (value) => email = value,
-            ),
-            TextFormField(
-              keyboardType: TextInputType.visiblePassword,
-              obscureText: true,
-              focusNode: passFocusNode,
-              validator: passValidator,
-              decoration: InputDecoration(labelText: 'Password'),
-              controller: passController,
-              onFieldSubmitted: (value) {
-                if (authenticationMode == AuthenticationMode.Signup)
-                  FocusScope.of(context).requestFocus(reEnterPassFocusNode);
-                password = passController.text;
-              },
-              onSaved: (_) => password = passController.text,
-            ),
-            if (authenticationMode == AuthenticationMode.Signup)
-              FadeTransition(
-                opacity: _textFieldFadeTransitionAnimation,
-                child: SlideTransition(
-                  position: _textFieldSlideAnimation,
-                  child: TextFormField(
-                    focusNode: reEnterPassFocusNode,
-                    obscureText: true,
-                    keyboardType: TextInputType.visiblePassword,
-                    textInputAction: TextInputAction.done,
-                    validator: reEnterPassValidator,
-                    decoration: InputDecoration(labelText: 'Repeat Password'),
-                    onFieldSubmitted: (_) => _submit(),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                validator: mailValidator,
+                decoration: InputDecoration(labelText: 'E-Mail'),
+                onFieldSubmitted: (value) {
+                  FocusScope.of(context).requestFocus(passFocusNode);
+                  email = value;
+                },
+                onSaved: (value) => email = value,
+              ),
+              TextFormField(
+                keyboardType: TextInputType.visiblePassword,
+                obscureText: true,
+                focusNode: passFocusNode,
+                validator: passValidator,
+                decoration: InputDecoration(labelText: 'Password'),
+                controller: passController,
+                onFieldSubmitted: (value) {
+                  if (authenticationMode == AuthenticationMode.Signup)
+                    FocusScope.of(context).requestFocus(reEnterPassFocusNode);
+                  password = passController.text;
+                },
+                onSaved: (_) => password = passController.text,
+              ),
+              if (authenticationMode == AuthenticationMode.Signup)
+                FadeTransition(
+                  opacity: _textFieldFadeTransitionAnimation,
+                  child: SlideTransition(
+                    position: _textFieldSlideAnimation,
+                    child: TextFormField(
+                      focusNode: reEnterPassFocusNode,
+                      obscureText: true,
+                      keyboardType: TextInputType.visiblePassword,
+                      textInputAction: TextInputAction.done,
+                      validator: reEnterPassValidator,
+                      decoration: InputDecoration(labelText: 'Repeat Password'),
+                      onFieldSubmitted: (_) => _submit(),
+                    ),
                   ),
                 ),
+              const SizedBox(
+                height: 20,
               ),
-            const SizedBox(
-              height: 20,
-            ),
-            RaisedButton(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              color: Theme.of(context).primaryColor,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              onPressed: _submit,
-              child: Text(
-                authenticationMode == AuthenticationMode.Login
-                    ? 'LOGIN'
-                    : 'SING UP',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            FlatButton(
-                onPressed: switchAuthenticationMode,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              RaisedButton(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                color: Theme.of(context).primaryColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                onPressed: _submit,
                 child: Text(
-                  '${authenticationMode == AuthenticationMode.Login ? 'SIGN UP' : 'LOGIN'} INSTEAD',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                ))
-          ],
+                  authenticationMode == AuthenticationMode.Login
+                      ? 'LOGIN'
+                      : 'SING UP',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              FlatButton(
+                  onPressed: switchAuthenticationMode,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  child: Text(
+                    '${authenticationMode == AuthenticationMode.Login ? 'SIGN UP' : 'LOGIN'} INSTEAD',
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ))
+            ],
+          ),
         ),
       ),
     );
