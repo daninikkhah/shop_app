@@ -17,7 +17,6 @@ import './controllers/custom_page_transitions_builder.dart';
 
 void main() {
   //SharedPreferences.setMockInitialValues({});
-
   runApp(MyApp());
 }
 
