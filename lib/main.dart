@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import './screens/product_overview_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
 import './screens/product_detail_screen.dart';
 import './providers/products_provider.dart';
 import './screens/cart_screen.dart';
@@ -14,6 +13,7 @@ import './screens/edit_product_screen.dart';
 import './screens/authentication_screen.dart';
 import './screens/loading_screen.dart';
 import './providers/authentication.dart';
+import './controllers/custom_page_transitions_builder.dart';
 
 void main() {
   //SharedPreferences.setMockInitialValues({});
@@ -78,6 +78,10 @@ class MyApp extends StatelessWidget {
       child: Consumer<Authentication>(
         builder: (context, auth, child) => MaterialApp(
           theme: ThemeData(
+            pageTransitionsTheme: PageTransitionsTheme(builders: {
+              TargetPlatform.android: CustomPageTransitionBuilder(),
+              TargetPlatform.iOS: CustomPageTransitionBuilder(),
+            }),
             primarySwatch: Colors.purple,
             accentColor: Colors.deepOrange,
             fontFamily: GoogleFonts.ptSerif().fontFamily,
